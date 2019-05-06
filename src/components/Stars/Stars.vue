@@ -1,19 +1,38 @@
 <template>
-  <div class="star star-24">
-    <span class="star-item on"></span>
-    <span class="star-item on"></span>
-    <span class="star-item on"></span>
-    <span class="star-item half"></span>
-    <span class="star-item off"></span>
+  <div class="star" :class="'star-'+size">
+    <span class="star-item" v-for="(sc,index) in starClasses" :class="sc" :key="index"></span>
   </div>
 </template>
 
 <script>
+  const CLASS_ON = 'on'
+  const CLASS_HALF = 'half'
+  const CLASS_OFF = 'off'
   export default {
     props:{
-      size: Number,
-      score: Number
-
+      size: Number,//五角心尺寸
+      score: Number // 当前分数
+    },
+    computed: {
+      starClasses () {
+        const {score} = this
+        const scs = []
+        //添加n个on   取评分向下取整，取出完整星的个数
+        const starInteger = Math.floor(score)
+        for (let i = 0; i <starInteger ; i++) {
+          scs.push(CLASS_ON)
+        }
+        //添加0或者1个half  当评分小数大于等于5的时候才插入半星
+        if (score * 10 - starInteger *10 >=5) {
+          scs.push(CLASS_HALF)
+        }
+        //添加n个off  当评分低于五分，且存在整分时则插入空星
+        while (scs.length < 5){
+          scs.push(CLASS_OFF)
+        }
+        console.log("当前数组长度"+scs.length)
+        return scs
+      }
     }
   }
 </script>
